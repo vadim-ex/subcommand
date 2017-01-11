@@ -12,7 +12,7 @@ _License_: [MIT License](https://github.com/vadim-ex/subcommand/blob/master/lice
 
 _Language_: Python 3.6+
 
-_Version_: 0.0.0
+_Version_: 0.1.0
 
 
 Build Your Own Command (Getting Started)
@@ -24,15 +24,22 @@ It is easy!
 
 1. Copy source files into appropriate location.
 
-2. Rename `cmd` script to `target` and `cmd-lib` to `target-lib`. (OK,
-any suitable name actually. It could be `foobar`, or `barfoo`, as long
-as you update `LIB_DIR` correctly -- see below.)
-**Warning:** do **not** rename `target-lib/cmdutil` (unless you want
-to correct all its occurrences in the code).
+2. Rename appropriately:
+
+    2.1. Rename `cmd` script to `target` and `cmd-lib` to `target-lib`.
+    (OK, any suitable name actually. It could be `foobar`, or `barfoo`,
+    as long as you update `LIB_DIR` correctly -- see below.)
+
+    **Warning:** do **not** rename `target-lib/cmdutil` (unless you want
+    to correct all its occurrences in the code).
+
+    2.2. Rename commands, for example `target-lib/cmd-new` to
+    `target-lib/target-new`.
 
 3. Update `target`:
 
-    3.1. Edit your command description (the `target` module's docstring).
+    3.1. Edit your command description (the `target` module's
+    docstring).
 
     3.2. Edit `LIB_DIR` to match your `target-lib` name.
 
@@ -41,13 +48,13 @@ in the directory on path.
 
 5. Create a subcommand:
 
-    5.1. _Copy_ `target-lib/template` to `target-lib/target-my-command.py`.
+    5.1. Run `target new my-command`. To be sure, `new` is a regular
+    subcommand, and is an example of how subcommand can be implemented.
 
     5.2. Edit description (`target-lib/target-my-command.py` docstring).
 
-    5.3. Edit subcommand's class name.
-
-    5.4. Edit subcommand's `execute()` method (by default, it prints arguments).
+    5.3. Edit subcommand's `execute()` method (by default, it prints
+    arguments).
 
 6. Try it!
 
