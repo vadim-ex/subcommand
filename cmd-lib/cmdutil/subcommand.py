@@ -38,6 +38,8 @@ class Subcommand(object):
                 .add_parser(subcommand, **parser_config)
         else:
             parser = argparse.ArgumentParser(**parser_config)
+
+        parser.unknown_args_name = None
         return parser
 
     def configure_parser(self, parser):
@@ -53,7 +55,13 @@ class Subcommand(object):
         parser = self._create_parser(subcommand)
         self.parser = self._configure_parser(parser)
         self.args = args[(2 if subcommand else 1):]
-        return self.parser.parse_args(self.args)
+        unknown_args_name = getattr(self.parser, 'unknown_args_name', None)
+        if unknown_args_name:
+            parsed, unknown = self.parser.parse_known_args(self.args)
+            setattr(parsed, unknown_args_name, unknown)
+        else:
+            parsed = self.parser.parse_args(self.args)
+        return parsed
 
     def arguments_error(self, message):
         self.parser.print_usage()
