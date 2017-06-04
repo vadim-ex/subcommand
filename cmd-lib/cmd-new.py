@@ -16,6 +16,7 @@ import pathlib
 import re
 import shlex
 import string
+import subprocess
 import sys
 
 import cmdutil
@@ -113,7 +114,8 @@ class New(cmdutil.Subcommand):
         editor = os.getenv('VISUAL') or os.getenv('EDITOR') or 'e'
         editor_command = shlex.split(editor)
         editor_command.append(str(path))
-        os.spawnvp(os.P_NOWAIT, editor_command[0], editor_command)
+        output = None if self.arguments.verbose else subprocess.DEVNULL
+        subprocess.Popen(editor_command, stdout=output, stderr=output)
 
     def _build_variables(self):
         subcommand_tokens = self._split(self.arguments.subcommand_name)
