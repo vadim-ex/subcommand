@@ -65,8 +65,11 @@ class Subcommand(object):
 
     def arguments_error(self, message):
         self.parser.print_usage()
+        self.error(message, returncode=2)
+
+    def error(self, message, returncode=4):
         print(message)
-        sys.exit(2)
+        sys.exit(returncode)
 
     def validate_arguments(self):
         pass
@@ -76,7 +79,7 @@ class Subcommand(object):
         self.module = sys.modules[self.__class__.__module__]
         self.arguments = self._parse(args, subcommand)
         self.validate_arguments()
-        self.execute()
+        sys.exit(self.execute() or 0)
 
 
 if __name__ == '__main__':
