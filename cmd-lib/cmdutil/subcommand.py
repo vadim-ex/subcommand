@@ -13,29 +13,31 @@ class Subcommand(object):
     """
 
     def _description(self):
-        description = self.module.__doc__ or ''
+        description = self.module.__doc__ or ""
         if not description.strip():
-            description = self.__doc__ or ''
-        lines = description.split('\n')
+            description = self.__doc__ or ""
+        lines = description.split("\n")
         indent = len(description) + 1
         for line in lines:
             stripped_line = line.lstrip()
             line_indent = len(line) - len(stripped_line)
             if stripped_line and line_indent < indent:
                 indent = line_indent
-        return ('\n'.join(line[indent:] for line in lines)).strip()
+        return ("\n".join(line[indent:] for line in lines)).strip()
 
     def _create_parser(self, subcommand=None):
         parser_config = {
-            'description': self._description(),
-            'formatter_class': argparse.RawTextHelpFormatter,
-            'allow_abbrev': False,
-            'add_help': False,
+            "description": self._description(),
+            "formatter_class": argparse.RawTextHelpFormatter,
+            "allow_abbrev": False,
+            "add_help": False,
         }
         if subcommand:
-            parser = argparse.ArgumentParser()                     \
-                .add_subparsers()                                  \
+            parser = (
+                argparse.ArgumentParser()
+                .add_subparsers()
                 .add_parser(subcommand, **parser_config)
+            )
         else:
             parser = argparse.ArgumentParser(**parser_config)
 
@@ -47,15 +49,17 @@ class Subcommand(object):
 
     def _configure_parser(self, parser):
         parser = self.configure_parser(parser) or parser
-        parser.add_argument('-v', '--verbose', action='store_true', help='verbose mode')
-        parser.add_argument('-h', '-?', '--help', action='help', help='show this help message and exit')
+        parser.add_argument("-v", "--verbose", action="store_true", help="verbose mode")
+        parser.add_argument(
+            "-h", "-?", "--help", action="help", help="show this help message and exit"
+        )
         return parser
 
     def _parse(self, args, subcommand):
         parser = self._create_parser(subcommand)
         self.parser = self._configure_parser(parser)
-        self.args = args[(2 if subcommand else 1):]
-        unknown_args_name = getattr(self.parser, 'unknown_args_name', None)
+        self.args = args[(2 if subcommand else 1) :]
+        unknown_args_name = getattr(self.parser, "unknown_args_name", None)
         if unknown_args_name:
             parsed, unknown = self.parser.parse_known_args(self.args)
             setattr(parsed, unknown_args_name, unknown)
@@ -82,5 +86,5 @@ class Subcommand(object):
         sys.exit(self.execute() or 0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

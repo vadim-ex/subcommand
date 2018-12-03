@@ -4,6 +4,7 @@ import pathlib
 import subprocess
 import sys
 
+
 def _exec(command, check):
     """
     execute the `command`.
@@ -11,13 +12,14 @@ def _exec(command, check):
     If `check` is True, the execution end if git root not found.
     Otherwise `None` is returned.
     """
-    complete = subprocess.run(command, stdout=subprocess.PIPE, encoding='utf-8')
+    complete = subprocess.run(command, stdout=subprocess.PIPE, encoding="utf-8")
     if complete.returncode == 0:
         return complete.stdout[:-1]
     elif check:
         sys.exit(complete.returncode)
     else:
         return None
+
 
 def git_path(check=True):
     """
@@ -26,8 +28,9 @@ def git_path(check=True):
     If `check` is True, the execution end if git root not found.
     Otherwise `None` is returned.
     """
-    path = _exec('git rev-parse --show-toplevel'.split(), check)
+    path = _exec("git rev-parse --show-toplevel".split(), check)
     return pathlib.Path(path) if path else path
+
 
 def git_ref(check=True):
     """
@@ -36,11 +39,12 @@ def git_ref(check=True):
     If `check` is True, the execution end if git root not found.
     Otherwise `None` is returned.
     """
-    branch = _exec('git rev-parse --abbrev-ref HEAD'.split(), check)
-    if branch != 'HEAD':
+    branch = _exec("git rev-parse --abbrev-ref HEAD".split(), check)
+    if branch != "HEAD":
         return branch
-    tag_ref = _exec('git describe --all'.split(), check)
-    return tag_ref[5:] if tag_ref.startswith('tags/') else 'HEAD'
+    tag_ref = _exec("git describe --all".split(), check)
+    return tag_ref[5:] if tag_ref.startswith("tags/") else "HEAD"
+
 
 def git_sha(check=True):
     """
@@ -49,15 +53,15 @@ def git_sha(check=True):
     If `check` is True, the execution end if git root not found.
     Otherwise `None` is returned.
     """
-    return _exec('git rev-parse HEAD'.split(), check)
+    return _exec("git rev-parse HEAD".split(), check)
 
 
 def git_dirty(check=True):
     """
     returns dirty status of git
     """
-    command = 'git diff-index --quiet HEAD --'.split()
-    complete = subprocess.run(command, stdout=subprocess.PIPE, encoding='utf-8')
+    command = "git diff-index --quiet HEAD --".split()
+    complete = subprocess.run(command, stdout=subprocess.PIPE, encoding="utf-8")
     return_code = complete.returncode
     if return_code == 0:
         return False
@@ -67,6 +71,7 @@ def git_dirty(check=True):
         sys.exit(complete.returncode)
     else:
         return None
+
 
 def file_location(file_name, check=True):
     """
@@ -83,10 +88,11 @@ def file_location(file_name, check=True):
     if (current / file_name).is_file():
         return current
     elif check:
-        print(f'expected file `{file_name}` not found')
+        print(f"expected file `{file_name}` not found")
         sys.exit(4)
     else:
         return None
+
 
 def project_location(file_name, check=True):
     """
@@ -96,14 +102,14 @@ def project_location(file_name, check=True):
     Otherwise `None` is returned.
     """
     current = pathlib.Path.cwd()
-    projects = current.glob('**/' + file_name)
+    projects = current.glob("**/" + file_name)
     while not list(projects) and len(current.parts) > 1:
         current = current.parent
-        projects = current.glob('**/' + file_name)
+        projects = current.glob("**/" + file_name)
     if projects:
         return current
     elif check:
-        print(f'expected file `{file_name}` not found')
+        print(f"expected file `{file_name}` not found")
         sys.exit(4)
     else:
         return None

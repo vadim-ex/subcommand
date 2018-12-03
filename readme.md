@@ -14,6 +14,7 @@ _Language_: Python 3.6+
 
 _Version_: 0.1.0
 
+From now on, the code in [Black](https://github.com/ambv/black) formatted.
 
 Build Your Own Command (Getting Started)
 ========================================
