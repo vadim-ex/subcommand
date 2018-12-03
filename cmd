@@ -9,10 +9,11 @@ import pathlib
 import sys
 
 
-LIB_DIR = 'cmd-lib'
+LIB_DIR = "cmd-lib"
 
 
 lib_path = pathlib.Path(pathlib.Path(sys.argv[0]).parent, LIB_DIR)
 sys.path.insert(0, str(lib_path))
 import cmdutil
+
 cmdutil.Command(sys.argv[0], __doc__, lib_path).run(sys.argv)
