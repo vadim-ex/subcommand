@@ -2,7 +2,9 @@
 """
 Run grep, ignoring irrelevant dirs.
 
-All unrecognized options are passed to grep.
+Note on parameters:
+* it is easier to control colors using command's option
+* if switches need to be passed to grep, one can use `--`
 """
 
 import argparse
@@ -24,13 +26,28 @@ class Grep(cmdutil.Subcommand):
             default=None,
             help="use ANSI colors in output",
         )
+        parser.add_argument(
+            "-g",
+            "--grep",
+            action="store_true",
+            help="use grep directly (instead of git grep)",
+        )
+        parser.add_argument(
+            "-p", "--pager", action="store_true", help="enable paging of results"
+        )
         parser.unknown_args_name = "grep_args"
 
     def execute(self):
         arguments = self.arguments
         if arguments.verbose:
             print("grep args:", arguments.grep_args, flush=True)
-        command = ["grep", "-r"]
+        if arguments.grep:
+            command = ["grep", "-r"]
+        else:
+            command = ["git"]
+            if not arguments.pager:
+                command.append("--no-pager")
+            command.append("grep")
         if arguments.color:
             if arguments.color[:1] == "a":
                 command.append("--color=always")
@@ -38,9 +55,9 @@ class Grep(cmdutil.Subcommand):
                 command.append("--color=never")
         else:
             command.append("--color=auto")
-        command += arguments.grep_args + [
-            f"--exclude-dir={dir}" for dir in EXCLUDED_DIRS
-        ]
+        command += arguments.grep_args
+        if arguments.grep:
+            command += [f"--exclude-dir={dir}" for dir in EXCLUDED_DIRS]
         completed_process = subprocess.run(command)
         return completed_process.returncode
 
