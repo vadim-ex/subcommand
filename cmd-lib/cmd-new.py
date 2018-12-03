@@ -38,9 +38,19 @@ import cmdutil
 class `SubcommandName`(cmdutil.Subcommand):
 
     # def configure_parser(self, parser):
-    #     pass
+    #     """configure parser with additional arguments"""
+    #     parser.add_argument('foo',
+    #                         help='positional foo.')
+    #     parser.add_argument('-r', '--bar',
+    #                         action='store_true',
+    #                         help='parameter-less bar')
 
     # def validate_arguments(self):
+    #     """
+    #     Additional validation of parsed arguments in `self.arguments`.
+    #
+    #     It is expected to call `self.error()` on violations.
+    #     """
     #     pass
 
     def execute(self):
